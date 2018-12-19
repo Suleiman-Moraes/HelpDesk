@@ -58,7 +58,7 @@ public class UserServiceIMPL implements UserService {
 			String validacao, PasswordEncoder passwordEncoder) {
 		Response<User> response = new Response<>();
 		try {
-			this.getClass().getDeclaredMethod(validacao, User.class, BindingResult.class).invoke(user, request);
+			this.getClass().getDeclaredMethod(validacao, User.class, BindingResult.class).invoke(this, user, result);
 			if (result.hasErrors()) {
 				result.getAllErrors().forEach(error -> response.getErros().add(error.getDefaultMessage()));
 				return ResponseEntity.badRequest().body(response);
