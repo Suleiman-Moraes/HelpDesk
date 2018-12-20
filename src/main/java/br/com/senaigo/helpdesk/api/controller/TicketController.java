@@ -18,26 +18,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.senaigo.helpdesk.api.entity.Ticket;
 import br.com.senaigo.helpdesk.api.entity.User;
 import br.com.senaigo.helpdesk.api.response.Response;
+import br.com.senaigo.helpdesk.api.security.jwt.JwtTokenUtil;
+import br.com.senaigo.helpdesk.api.service.TicketService;
 import br.com.senaigo.helpdesk.api.service.UserService;
 
 @RestController
 @RequestMapping("/api/ticket")
 @CrossOrigin(origins = "*")
 public class TicketController {
+	
+	@Autowired
+	private TicketService ticketService;
 
 	@Autowired
 	private UserService userService;
 
 	@Autowired
-	private PasswordEncoder passwordEncoder;
+	protected JwtTokenUtil jwtTokenUtil;
 
 	@PostMapping
 	@PreAuthorize("hasAnyRole('ADMIN')")
-	public ResponseEntity<Response<User>> create(HttpServletRequest request, @RequestBody User user,
+	public ResponseEntity<Response<Ticket>> create(HttpServletRequest request, @RequestBody Ticket ticket,
 			BindingResult result) {
-		return userService.prepararCreateOrUpdate(request, user, result, UserService.VALIDATECREATEUSER, passwordEncoder);
+		return ticketService.prepararCreateOrUpdate(request, user, result, UserService.VALIDATECREATEUSER, passwordEncoder);
 	}
 	
 	@PutMapping

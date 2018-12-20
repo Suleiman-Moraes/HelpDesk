@@ -1,16 +1,29 @@
 package br.com.senaigo.helpdesk.api.service.implementacao;
 
+import java.util.Date;
+import java.util.Random;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 import br.com.senaigo.helpdesk.api.entity.ChangeStatus;
 import br.com.senaigo.helpdesk.api.entity.Ticket;
+import br.com.senaigo.helpdesk.api.entity.User;
+import br.com.senaigo.helpdesk.api.enumeration.StatusEnum;
 import br.com.senaigo.helpdesk.api.repository.ChangeStatusRepository;
 import br.com.senaigo.helpdesk.api.repository.TicketRepository;
+import br.com.senaigo.helpdesk.api.response.Response;
+import br.com.senaigo.helpdesk.api.security.jwt.JwtTokenUtil;
 import br.com.senaigo.helpdesk.api.service.TicketService;
+import br.com.senaigo.helpdesk.api.service.UserService;
 
 @Service
 public class TicketServiceIMPL implements TicketService{
@@ -89,4 +102,60 @@ public class TicketServiceIMPL implements TicketService{
 		return persistencia.findByTituloIgnoreCaseContainingAndStatusEnumAndPrioridadeEnumAndAssignedUserIdOrderByDataDesc(title, status, prioridade, pages);
 	}
 	
+	@Override
+	public ResponseEntity<Response<Ticket>> prepararCreateOrUpdate(HttpServletRequest request, Ticket ticket, BindingResult result,
+			String validacao, JwtTokenUtil jwtTokenUtil, UserService userService) {
+		Response<Ticket> response = new Response<>();
+		try {
+			this.getClass().getDeclaredMethod(validacao, User.class, BindingResult.class).invoke(this, ticket, result);
+			if (result.hasErrors()) {
+				result.getAllErrors().forEach(error -> response.getErros().add(error.getDefaultMessage()));
+				return ResponseEntity.badRequest().body(response);
+			}
+			ticket.setStatusEnum(StatusEnum.NOVO);
+			ticket.setUser(userFromRequest(request, jwtTokenUtil, userService));
+			ticket.setData(new Date());
+			ticket.setNumero(generateNumber());
+			Ticket ticketPersisted = (Ticket) createOrUpdate(ticket);
+			response.setData(ticketPersisted);
+		} catch (Exception e) {
+			response.getErros().add(e.getMessage());
+			return ResponseEntity.badRequest().body(response);
+		}
+		return ResponseEntity.ok(response);
+	}
+
+	private Integer generateNumber() {
+		Random random = new Random();
+		return random.nextInt(9999);
+	}
+
+	private User userFromRequest(HttpServletRequest request, JwtTokenUtil jwtTokenUtil, UserService userService) {
+		final String token = request.getHeader("Authorization");
+		final String email = jwtTokenUtil.getUsernameFromToken(token);
+		return userService.findByEmail(email);
+	}
+
+	public void validateCreateTicket(Ticket ticket, BindingResult result) {
+		if(ticket == null) {
+			result.addError(new ObjectError("Ticket", "Ticket não informado"));
+		} else{
+			if(ticket.getTitulo() == null) {
+				result.addError(new ObjectError("Ticket", "Título não informado"));
+			}
+		}
+	}
+
+	private void validateEmaiOfUser(User user, BindingResult result) {
+		if (user.getEmail() == null) {
+			result.addError(new ObjectError("User", "E-mail não informado"));
+		}
+	}
+
+	public void validateUpdateUser(User user, BindingResult result) {
+		if (user.getId() == null) {
+			result.addError(new ObjectError("User", "Id não informado"));
+		}
+		this.validateEmaiOfUser(user, result);
+	}
 }

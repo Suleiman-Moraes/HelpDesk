@@ -1,13 +1,22 @@
 package br.com.senaigo.helpdesk.api.service;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
 
 import br.com.senaigo.helpdesk.api.entity.ChangeStatus;
 import br.com.senaigo.helpdesk.api.entity.Ticket;
+import br.com.senaigo.helpdesk.api.response.Response;
+import br.com.senaigo.helpdesk.api.security.jwt.JwtTokenUtil;
 
 @Component
 public interface TicketService {
+	static final String VALIDATEUPDATEUSER = "validateUpdateUser";
+	static final String VALIDATECREATETICKET = "validateCreateTicket";
+	
 	Ticket createOrUpdate(Ticket objeto);
 	
 	Ticket findById(String id);
@@ -31,4 +40,17 @@ public interface TicketService {
 	Iterable<Ticket> findAll();
 	
 	Page<Ticket> findByParameterAndAssignedUser(int page, int count, String title, String status, String prioridade, String assignedUser);
+	
+	/**
+	 * @author suleiman-am
+	 * @param request
+	 * @param ticket
+	 * @param result
+	 * @param validacao
+	 * @param jwtTokenUtil
+	 * @param userService
+	 * @return
+	 */
+	ResponseEntity<Response<Ticket>> prepararCreateOrUpdate(HttpServletRequest request, Ticket ticket, BindingResult result,
+			String validacao, JwtTokenUtil jwtTokenUtil, UserService userService);
 }
