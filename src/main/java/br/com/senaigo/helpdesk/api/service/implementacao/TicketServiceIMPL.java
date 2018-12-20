@@ -112,10 +112,22 @@ public class TicketServiceIMPL implements TicketService{
 				result.getAllErrors().forEach(error -> response.getErros().add(error.getDefaultMessage()));
 				return ResponseEntity.badRequest().body(response);
 			}
-			ticket.setStatusEnum(StatusEnum.NOVO);
-			ticket.setUser(userFromRequest(request, jwtTokenUtil, userService));
-			ticket.setData(new Date());
-			ticket.setNumero(generateNumber());
+			if(validacao.equals(TicketService.VALIDATECREATETICKET)) {
+				ticket.setStatusEnum(StatusEnum.NOVO);
+				ticket.setUser(userFromRequest(request, jwtTokenUtil, userService));
+				ticket.setData(new Date());
+				ticket.setNumero(generateNumber());
+			}
+			else if(validacao.equals(TicketService.VALIDATEUPDATETICKET)){
+				Ticket ticketCurrent = findById(ticket.getId());
+				ticket.setStatusEnum(ticketCurrent.getStatusEnum());
+				ticket.setUser(ticketCurrent.getUser());
+				ticket.setData(ticketCurrent.getData());
+				ticket.setNumero(ticketCurrent.getNumero());
+				if(ticketCurrent.getAssignedUser() != null) {
+					ticket.setAssignedUser(ticketCurrent.getAssignedUser());
+				}
+			}
 			Ticket ticketPersisted = (Ticket) createOrUpdate(ticket);
 			response.setData(ticketPersisted);
 		} catch (Exception e) {
@@ -130,32 +142,27 @@ public class TicketServiceIMPL implements TicketService{
 		return random.nextInt(9999);
 	}
 
-	private User userFromRequest(HttpServletRequest request, JwtTokenUtil jwtTokenUtil, UserService userService) {
+	@Override
+	public User userFromRequest(HttpServletRequest request, JwtTokenUtil jwtTokenUtil, UserService userService) {
 		final String token = request.getHeader("Authorization");
 		final String email = jwtTokenUtil.getUsernameFromToken(token);
 		return userService.findByEmail(email);
 	}
 
 	public void validateCreateTicket(Ticket ticket, BindingResult result) {
-		if(ticket == null) {
-			result.addError(new ObjectError("Ticket", "Ticket não informado"));
-		} else{
-			if(ticket.getTitulo() == null) {
-				result.addError(new ObjectError("Ticket", "Título não informado"));
-			}
+		validateTicketNotNullAndTituloOfTicket(ticket, result);
+	}
+
+	private void validateTicketNotNullAndTituloOfTicket(Ticket ticket, BindingResult result) {
+		if(ticket.getTitulo() == null) {
+			result.addError(new ObjectError("Ticket", "Título não informado"));
 		}
 	}
 
-	private void validateEmaiOfUser(User user, BindingResult result) {
-		if (user.getEmail() == null) {
-			result.addError(new ObjectError("User", "E-mail não informado"));
+	public void validateUpdateTicket(Ticket ticket, BindingResult result) {
+		validateTicketNotNullAndTituloOfTicket(ticket, result);
+		if(ticket.getId() == null) {
+			result.addError(new ObjectError("Ticket", "ID não informado"));
 		}
-	}
-
-	public void validateUpdateUser(User user, BindingResult result) {
-		if (user.getId() == null) {
-			result.addError(new ObjectError("User", "Id não informado"));
-		}
-		this.validateEmaiOfUser(user, result);
 	}
 }

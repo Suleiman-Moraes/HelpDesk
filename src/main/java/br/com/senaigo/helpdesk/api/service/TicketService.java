@@ -9,12 +9,13 @@ import org.springframework.validation.BindingResult;
 
 import br.com.senaigo.helpdesk.api.entity.ChangeStatus;
 import br.com.senaigo.helpdesk.api.entity.Ticket;
+import br.com.senaigo.helpdesk.api.entity.User;
 import br.com.senaigo.helpdesk.api.response.Response;
 import br.com.senaigo.helpdesk.api.security.jwt.JwtTokenUtil;
 
 @Component
 public interface TicketService {
-	static final String VALIDATEUPDATEUSER = "validateUpdateUser";
+	static final String VALIDATEUPDATETICKET = "validateUpdateTicket";
 	static final String VALIDATECREATETICKET = "validateCreateTicket";
 	
 	Ticket createOrUpdate(Ticket objeto);
@@ -53,4 +54,6 @@ public interface TicketService {
 	 */
 	ResponseEntity<Response<Ticket>> prepararCreateOrUpdate(HttpServletRequest request, Ticket ticket, BindingResult result,
 			String validacao, JwtTokenUtil jwtTokenUtil, UserService userService);
+	
+	User userFromRequest(HttpServletRequest request, JwtTokenUtil jwtTokenUtil, UserService userService);
 }
