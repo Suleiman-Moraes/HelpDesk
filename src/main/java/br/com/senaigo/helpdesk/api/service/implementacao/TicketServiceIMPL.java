@@ -24,6 +24,7 @@ import br.com.senaigo.helpdesk.api.response.Response;
 import br.com.senaigo.helpdesk.api.security.jwt.JwtTokenUtil;
 import br.com.senaigo.helpdesk.api.service.TicketService;
 import br.com.senaigo.helpdesk.api.service.UserService;
+import br.com.senaigo.helpdesk.api.util.StringUtil;
 
 @Service
 public class TicketServiceIMPL implements TicketService{
@@ -158,10 +159,22 @@ public class TicketServiceIMPL implements TicketService{
 			result.addError(new ObjectError("Ticket", "Título não informado"));
 		}
 	}
-
+	
 	public void validateUpdateTicket(Ticket ticket, BindingResult result) {
 		validateTicketNotNullAndTituloOfTicket(ticket, result);
-		if(ticket.getId() == null) {
+		validateIdTicketIsNotNullOrEmpty(ticket, result);
+	}
+
+	@Override
+	public void validateChangeStatus(Ticket ticket, String status, BindingResult result) {
+		validateIdTicketIsNotNullOrEmpty(ticket, result);
+		if(StringUtil.isNotNullOrEmpty(status)) {
+			result.addError(new ObjectError("Ticket", "Status não informado"));
+		}
+	}
+	
+	private void validateIdTicketIsNotNullOrEmpty(Ticket ticket, BindingResult result) {
+		if(StringUtil.isNotNullOrEmpty(ticket.getId())) {
 			result.addError(new ObjectError("Ticket", "ID não informado"));
 		}
 	}

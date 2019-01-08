@@ -56,4 +56,6 @@ public interface TicketService {
 			String validacao, JwtTokenUtil jwtTokenUtil, UserService userService);
 	
 	User userFromRequest(HttpServletRequest request, JwtTokenUtil jwtTokenUtil, UserService userService);
+	
+	void validateChangeStatus(Ticket ticket, String status, BindingResult result);
 }
