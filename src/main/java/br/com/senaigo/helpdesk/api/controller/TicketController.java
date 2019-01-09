@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.senaigo.helpdesk.api.controller.interfaces.ICRUDSimples;
 import br.com.senaigo.helpdesk.api.dto.Summary;
 import br.com.senaigo.helpdesk.api.entity.ChangeStatus;
 import br.com.senaigo.helpdesk.api.entity.Ticket;
@@ -33,11 +32,12 @@ import br.com.senaigo.helpdesk.api.response.Response;
 import br.com.senaigo.helpdesk.api.security.jwt.JwtTokenUtil;
 import br.com.senaigo.helpdesk.api.service.TicketService;
 import br.com.senaigo.helpdesk.api.service.UserService;
+import br.com.senaigo.helpdesk.api.util.ICRUDSimples;
 
 @RestController
 @RequestMapping("/api/ticket")
 @CrossOrigin(origins = "*")
-public class TicketController implements ICRUDSimples<Ticket>{
+public class TicketController{
 
 	@Autowired
 	private TicketService ticketService;
@@ -67,7 +67,7 @@ public class TicketController implements ICRUDSimples<Ticket>{
 	@GetMapping(value = "{id}")
 	@PreAuthorize("hasAnyRole('CUSTOMER', 'TECHNICIAN')")
 	public ResponseEntity<Response<Ticket>> findById(@PathVariable("id") String id) {
-		ResponseEntity<Response<Ticket>> responseEntity = interfaceFindById(id, ticketService);
+		ResponseEntity<Response<Ticket>> responseEntity = ICRUDSimples.interfaceFindById(id, ticketService);
 		Ticket ticket = responseEntity.getBody().getData();
 		List<ChangeStatus> listaChangeStatus = new ArrayList<>();
 		Iterable<ChangeStatus> listaChangeStatusCurrent = ticketService.listChangeStatus(ticket.getId());
@@ -84,7 +84,7 @@ public class TicketController implements ICRUDSimples<Ticket>{
 	@DeleteMapping(value = "{id}")
 	@PreAuthorize("hasAnyRole('CUSTOMER')")
 	public ResponseEntity<Response<String>> deleteById(@PathVariable("id") String id) {
-		return interfaceDeleteById(id, ticketService);
+		return ICRUDSimples.interfaceDeleteById(id, ticketService);
 	}
 	
 	@GetMapping(value = "{page}/{count}")

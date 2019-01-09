@@ -1,18 +1,19 @@
-package br.com.senaigo.helpdesk.api.controller.interfaces;
+package br.com.senaigo.helpdesk.api.util;
 
 import org.springframework.http.ResponseEntity;
 
 import br.com.senaigo.helpdesk.api.response.Response;
 
-public interface ICRUDSimples<T> {
+public class ICRUDSimples {
 	/**
 	 * 
+	 * @param <T>
 	 * @param id
 	 * @param service
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	default ResponseEntity<Response<T>> interfaceFindById(String id, Object service) {
+	public static <T> ResponseEntity<Response<T>> interfaceFindById(String id, Object service) {
 		Response<T> response = new Response<>();
 		try {
 			T objeto = (T) service.getClass().getMethod("findById", String.class).invoke(service.getClass(), id);
@@ -29,7 +30,7 @@ public interface ICRUDSimples<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	default ResponseEntity<Response<String>> interfaceDeleteById(String id, Object service) {
+	public static <T> ResponseEntity<Response<String>> interfaceDeleteById(String id, Object service) {
 		Response<String> response = new Response<>();
 		try {
 			T objeto = (T) service.getClass().getMethod("findById", String.class).invoke(service.getClass(), id);
