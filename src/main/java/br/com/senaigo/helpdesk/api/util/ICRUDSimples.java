@@ -16,7 +16,7 @@ public class ICRUDSimples {
 	public static <T> ResponseEntity<Response<T>> interfaceFindById(String id, Object service) {
 		Response<T> response = new Response<>();
 		try {
-			T objeto = (T) service.getClass().getMethod("findById", String.class).invoke(service.getClass(), id);
+			T objeto = (T) service.getClass().getMethod("findById", String.class).invoke(service, id);
 			if (objeto == null) {
 				response.getErros().add("ID não registrado == " + id);
 				return ResponseEntity.badRequest().body(response);
@@ -33,12 +33,12 @@ public class ICRUDSimples {
 	public static <T> ResponseEntity<Response<String>> interfaceDeleteById(String id, Object service) {
 		Response<String> response = new Response<>();
 		try {
-			T objeto = (T) service.getClass().getMethod("findById", String.class).invoke(service.getClass(), id);
+			T objeto = (T) service.getClass().getMethod("findById", String.class).invoke(service, id);
 			if (objeto == null) {
 				response.getErros().add("ID não registrado == " + id);
 				return ResponseEntity.badRequest().body(response);
 			}
-			service.getClass().getMethod("delete", String.class).invoke(service.getClass(), id);
+			service.getClass().getMethod("delete", String.class).invoke(service, id);
 			return ResponseEntity.ok(new Response<>());
 		} catch (Exception e) {
 			response.getErros().add(e.getMessage());

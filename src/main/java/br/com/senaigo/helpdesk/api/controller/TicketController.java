@@ -210,6 +210,7 @@ public class TicketController{
 			}
 		}
 		summary.setSummary(amountNovo, amountResolvido, amountAprovado, amountDesaprovado, amountDesignado, amountFechado);
+		response.setData(summary);
 		return ResponseEntity.ok(response);
 	}
 }

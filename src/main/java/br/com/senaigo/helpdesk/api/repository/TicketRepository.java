@@ -13,10 +13,10 @@ public interface TicketRepository extends MongoRepository<Ticket, String> {
 			String statusEnum, String prioridadeEnum, Pageable pages);
 
 	Page<Ticket> findByTituloIgnoreCaseContainingAndStatusEnumAndPrioridadeEnumAndUserIdOrderByDataDesc(String titulo,
-			String statusEnum, String prioridadeEnum, Pageable pages);
+			String statusEnum, String prioridadeEnum, String userId, Pageable pages);
 
 	Page<Ticket> findByTituloIgnoreCaseContainingAndStatusEnumAndPrioridadeEnumAndAssignedUserIdOrderByDataDesc(
-			String titulo, String statusEnum, String prioridadeEnum, Pageable pages);
+			String titulo, String statusEnum, String prioridadeEnum, String userId, Pageable pages);
 
 	Page<Ticket> findByNumero(Integer number, Pageable pages);
 }

@@ -76,7 +76,7 @@ public class TicketServiceIMPL implements TicketService{
 	public Page<Ticket> findByParametersAndCurrentUser(int page, int count, String title, String status,
 			String prioridade, String userId) {
 		Pageable pages = PageRequest.of(page, count);
-		return persistencia.findByTituloIgnoreCaseContainingAndStatusEnumAndPrioridadeEnumAndUserIdOrderByDataDesc(title, status, prioridade, pages);
+		return persistencia.findByTituloIgnoreCaseContainingAndStatusEnumAndPrioridadeEnumAndUserIdOrderByDataDesc(title, status, prioridade, userId, pages);
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class TicketServiceIMPL implements TicketService{
 	public Page<Ticket> findByParameterAndAssignedUser(int page, int count, String title, String status,
 			String prioridade, String assignedUser) {
 		Pageable pages = PageRequest.of(page, count);
-		return persistencia.findByTituloIgnoreCaseContainingAndStatusEnumAndPrioridadeEnumAndAssignedUserIdOrderByDataDesc(title, status, prioridade, pages);
+		return persistencia.findByTituloIgnoreCaseContainingAndStatusEnumAndPrioridadeEnumAndAssignedUserIdOrderByDataDesc(title, status, prioridade, assignedUser, pages);
 	}
 	
 	@Override
@@ -108,7 +108,7 @@ public class TicketServiceIMPL implements TicketService{
 			String validacao, JwtTokenUtil jwtTokenUtil, UserService userService) {
 		Response<Ticket> response = new Response<>();
 		try {
-			this.getClass().getDeclaredMethod(validacao, User.class, BindingResult.class).invoke(this, ticket, result);
+			this.getClass().getDeclaredMethod(validacao, Ticket.class, BindingResult.class).invoke(this, ticket, result);
 			if (result.hasErrors()) {
 				result.getAllErrors().forEach(error -> response.getErros().add(error.getDefaultMessage()));
 				return ResponseEntity.badRequest().body(response);
@@ -168,13 +168,13 @@ public class TicketServiceIMPL implements TicketService{
 	@Override
 	public void validateChangeStatus(Ticket ticket, String status, BindingResult result) {
 		validateIdTicketIsNotNullOrEmpty(ticket, result);
-		if(StringUtil.isNotNullOrEmpty(status)) {
+		if(StringUtil.isNullOrEmpty(status)) {
 			result.addError(new ObjectError("Ticket", "Status não informado"));
 		}
 	}
 	
 	private void validateIdTicketIsNotNullOrEmpty(Ticket ticket, BindingResult result) {
-		if(StringUtil.isNotNullOrEmpty(ticket.getId())) {
+		if(StringUtil.isNullOrEmpty(ticket.getId())) {
 			result.addError(new ObjectError("Ticket", "ID não informado"));
 		}
 	}
