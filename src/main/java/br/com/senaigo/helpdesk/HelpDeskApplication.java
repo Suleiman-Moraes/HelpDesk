@@ -10,7 +10,7 @@ import br.com.senaigo.helpdesk.api.entity.User;
 import br.com.senaigo.helpdesk.api.enumeration.ProfileEnum;
 import br.com.senaigo.helpdesk.api.repository.UserRepository;
 
-@SpringBootApplication(scanBasePackages = { "br.com.senaigo.helpdesk" })
+@SpringBootApplication
 public class HelpDeskApplication{
 	
 	private static final String E_MAIL = "suleimanmoraes@yahoo.com";
