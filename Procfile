@@ -1,0 +1,1 @@
+web: java -jar target/HelpDesk-0.0.1-SNAPSHOT.jar
