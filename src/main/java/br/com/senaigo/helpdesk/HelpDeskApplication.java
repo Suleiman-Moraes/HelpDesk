@@ -9,8 +9,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 
@@ -18,18 +16,12 @@ import br.com.senaigo.helpdesk.api.entity.User;
 import br.com.senaigo.helpdesk.api.enumeration.ProfileEnum;
 import br.com.senaigo.helpdesk.api.repository.UserRepository;
 
-@RestController
 @SpringBootApplication(scanBasePackages = { "br.com.senaigo.helpdesk" })
 public class HelpDeskApplication extends SpringBootServletInitializer {
 	
 	private static final String E_MAIL = "suleimanmoraes@yahoo.com";
 	private static final String PASSWORD = "123456";
 	
-	@GetMapping("/")
-	public String aaa() {
-		return "Welcome";
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(HelpDeskApplication.class, args);
 	}
