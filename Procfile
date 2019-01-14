@@ -1,1 +1,1 @@
-web: java -jar /HelpDesk/target/classes/HelpDesk-0.0.1-SNAPSHOT.jar
+web: java -jar /HelpDesk/src/main/java/br/com/senaigo/helpdesk/HelpDeskApplication.jar
