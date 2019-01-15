@@ -12,7 +12,7 @@
 	<groupId>br.com.senaigo</groupId>
 	<artifactId>HelpDesk</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>HelpDesk</name>
 	<description>WEB Service Spring Boot</description>
 
