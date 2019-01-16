@@ -33,10 +33,10 @@ public class SimpleCORSFilter implements Filter{
 			throws IOException, ServletException {
 		HttpServletResponse response = (HttpServletResponse) respons;
 		HttpServletRequest request = (HttpServletRequest) requeste;
-		response.setHeader("Acess-Control-Allow-Origin", "*");
-		response.setHeader("Acess-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
-		response.setHeader("Acess-Control-Max-Age", "3600");
-		response.setHeader("Acess-Control-Allow-Headers", 
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
+		response.setHeader("Access-Control-Max-Age", "3600");
+		response.setHeader("Access-Control-Allow-Headers", 
 				"x-requested-with, authorization, Content-Type, Authorization, credential, X-XSRF-TOKEN");
 		
 		if("OPTIONS".equalsIgnoreCase(request.getMethod())) {
