@@ -9,13 +9,13 @@ import br.com.senaigo.helpdesk.api.entity.Ticket;
 public interface TicketRepository extends MongoRepository<Ticket, String> {
 	Page<Ticket> findByUserIdOrderByDataDesc(Pageable pages, String userID);
 
-	Page<Ticket> findByTituloIgnoreCaseContainingAndStatusEnumAndPrioridadeEnumOrderByDataDesc(String titulo,
+	Page<Ticket> findByTituloIgnoreCaseContainingAndStatusEnumIgnoreCaseContainingAndPrioridadeEnumIgnoreCaseContainingOrderByDataDesc(String titulo,
 			String statusEnum, String prioridadeEnum, Pageable pages);
 
-	Page<Ticket> findByTituloIgnoreCaseContainingAndStatusEnumAndPrioridadeEnumAndUserIdOrderByDataDesc(String titulo,
-			String statusEnum, String prioridadeEnum, String userId, Pageable pages);
+	Page<Ticket> findByTituloIgnoreCaseContainingAndStatusEnumIgnoreCaseContainingAndPrioridadeEnumIgnoreCaseContainingAndUserIdOrderByDataDesc(
+			String titulo, String statusEnum, String prioridadeEnum, String userId, Pageable pages);
 
-	Page<Ticket> findByTituloIgnoreCaseContainingAndStatusEnumAndPrioridadeEnumAndAssignedUserIdOrderByDataDesc(
+	Page<Ticket> findByTituloIgnoreCaseContainingAndStatusEnumIgnoreCaseContainingAndPrioridadeEnumIgnoreCaseContainingAndAssignedUserIdOrderByDataDesc(
 			String titulo, String statusEnum, String prioridadeEnum, String userId, Pageable pages);
 
 	Page<Ticket> findByNumero(Integer number, Pageable pages);

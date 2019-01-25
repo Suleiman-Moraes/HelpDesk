@@ -76,13 +76,13 @@ public class TicketServiceIMPL implements TicketService{
 	public Page<Ticket> findByParametersAndCurrentUser(int page, int count, String title, String status,
 			String prioridade, String userId) {
 		Pageable pages = PageRequest.of(page, count);
-		return persistencia.findByTituloIgnoreCaseContainingAndStatusEnumAndPrioridadeEnumAndUserIdOrderByDataDesc(title, status, prioridade, userId, pages);
+		return persistencia.findByTituloIgnoreCaseContainingAndStatusEnumIgnoreCaseContainingAndPrioridadeEnumIgnoreCaseContainingAndUserIdOrderByDataDesc(title, status, prioridade, userId, pages);
 	}
 
 	@Override
 	public Page<Ticket> findByParameters(int page, int count, String title, String status, String prioridade) {
 		Pageable pages = PageRequest.of(page, count);
-		return persistencia.findByTituloIgnoreCaseContainingAndStatusEnumAndPrioridadeEnumOrderByDataDesc(title, status, prioridade, pages);
+		return persistencia.findByTituloIgnoreCaseContainingAndStatusEnumIgnoreCaseContainingAndPrioridadeEnumIgnoreCaseContainingOrderByDataDesc(title, status, prioridade, pages);
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class TicketServiceIMPL implements TicketService{
 	public Page<Ticket> findByParameterAndAssignedUser(int page, int count, String title, String status,
 			String prioridade, String assignedUser) {
 		Pageable pages = PageRequest.of(page, count);
-		return persistencia.findByTituloIgnoreCaseContainingAndStatusEnumAndPrioridadeEnumAndAssignedUserIdOrderByDataDesc(title, status, prioridade, assignedUser, pages);
+		return persistencia.findByTituloIgnoreCaseContainingAndStatusEnumIgnoreCaseContainingAndPrioridadeEnumIgnoreCaseContainingAndAssignedUserIdOrderByDataDesc(title, status, prioridade, assignedUser, pages);
 	}
 	
 	@Override
